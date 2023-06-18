@@ -5,7 +5,7 @@ package org.example.template.domain.db;
 
 
 import org.example.template.domain.db.tables.FlywaySchemaHistory;
-import org.example.template.domain.db.tables.Template;
+import org.example.template.domain.db.tables.Users;
 
 
 /**
@@ -20,7 +20,7 @@ public class Tables {
     public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
 
     /**
-     * The table <code>public.template</code>.
+     * The table <code>public.users</code>.
      */
-    public static final Template TEMPLATE = Template.TEMPLATE;
+    public static final Users USERS = Users.USERS;
 }

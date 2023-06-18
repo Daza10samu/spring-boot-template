@@ -5,7 +5,6 @@ package org.example.template.domain.db;
 
 
 import org.example.template.domain.db.tables.FlywaySchemaHistory;
-import org.example.template.domain.db.tables.Template;
 import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;
@@ -23,5 +22,4 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     public static final Index FLYWAY_SCHEMA_HISTORY_S_IDX = Internal.createIndex(DSL.name("flyway_schema_history_s_idx"), FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, new OrderField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.SUCCESS }, false);
-    public static final Index IDX__TEMPLATE__NAME = Internal.createIndex(DSL.name("idx__template__name"), Template.TEMPLATE, new OrderField[] { Template.TEMPLATE.NAME }, false);
 }

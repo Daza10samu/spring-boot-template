@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.example.template.domain.db.tables.FlywaySchemaHistory;
-import org.example.template.domain.db.tables.Template;
+import org.example.template.domain.db.tables.Users;
 import org.jooq.Catalog;
 import org.jooq.Sequence;
 import org.jooq.Table;
@@ -34,9 +34,9 @@ public class Public extends SchemaImpl {
     public final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
 
     /**
-     * The table <code>public.template</code>.
+     * The table <code>public.users</code>.
      */
-    public final Template TEMPLATE = Template.TEMPLATE;
+    public final Users USERS = Users.USERS;
 
     /**
      * No further instances allowed
@@ -54,13 +54,13 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Sequence<?>> getSequences() {
         return Arrays.<Sequence<?>>asList(
-            Sequences.TEMPLATE_ID_SEQ);
+            Sequences.USERS_ID_SEQ);
     }
 
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
-            Template.TEMPLATE);
+            Users.USERS);
     }
 }

@@ -5,9 +5,9 @@ package org.example.template.domain.db;
 
 
 import org.example.template.domain.db.tables.FlywaySchemaHistory;
-import org.example.template.domain.db.tables.Template;
+import org.example.template.domain.db.tables.Users;
 import org.example.template.domain.db.tables.records.FlywaySchemaHistoryRecord;
-import org.example.template.domain.db.tables.records.TemplateRecord;
+import org.example.template.domain.db.tables.records.UsersRecord;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
@@ -26,5 +26,5 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
-    public static final UniqueKey<TemplateRecord> TEMPLATE_PKEY = Internal.createUniqueKey(Template.TEMPLATE, DSL.name("template_pkey"), new TableField[] { Template.TEMPLATE.ID }, true);
+    public static final UniqueKey<UsersRecord> USERS_USERNAME_KEY = Internal.createUniqueKey(Users.USERS, DSL.name("users_username_key"), new TableField[] { Users.USERS.USERNAME }, true);
 }

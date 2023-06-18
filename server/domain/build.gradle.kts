@@ -38,8 +38,8 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
 
     testFixturesApi("org.springframework.boot:spring-boot-starter-test")
-    testFixturesApi("io.zonky.test:embedded-postgres:1.3.1")
-    testFixturesApi("io.zonky.test:embedded-database-spring-test:2.1.1")
+    testFixturesApi("io.zonky.test:embedded-postgres:2.0.4")
+    testFixturesApi("io.zonky.test:embedded-database-spring-test:2.2.0")
     testFixturesApi(enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:14.3.0"))
 }
 
