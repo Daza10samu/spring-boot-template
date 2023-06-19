@@ -31,6 +31,7 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-jooq")
+    implementation("org.jobrunr:jobrunr-spring-boot-2-starter:6.1.1")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
