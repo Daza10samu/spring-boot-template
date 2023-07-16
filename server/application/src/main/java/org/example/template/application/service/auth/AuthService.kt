@@ -18,8 +18,6 @@ class AuthService(
     private val jwtTokensRepository: JwtTokensRepository,
     private val transactionTemplate: TransactionTemplate,
 ) {
-    private val refreshStorage: MutableMap<String, String> = HashMap()
-
     fun login(username: String, password: String): JwtTokens {
         val user: User = userService.getUser(username)
         if (passwordEncoder.matches(password, user.password)) {

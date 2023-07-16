@@ -25,7 +25,6 @@ dependencies {
     api("io.jsonwebtoken:jjwt-api:0.11.5")
     api("io.jsonwebtoken:jjwt-impl:0.11.5")
     api("io.jsonwebtoken:jjwt-jackson:0.11.5")
-    api("com.fasterxml.jackson.core:jackson-databind:2.13.4.1")
 
     implementation("org.jobrunr:jobrunr-spring-boot-2-starter:6.1.1")
 

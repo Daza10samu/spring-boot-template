@@ -1,7 +1,9 @@
 package org.example.template.domain.repository.impl
 
 import org.example.template.domain.db.Tables.USERS
+import org.example.template.domain.db.tables.UserRoles.USER_ROLES
 import org.example.template.domain.db.tables.records.UsersRecord
+import org.example.template.domain.model.auth.Role
 import org.example.template.domain.model.auth.User
 import org.example.template.domain.repository.UserRepository
 import org.jooq.DSLContext
@@ -14,7 +16,7 @@ class UserRepositoryImpl(
     private val transactionTemplate: TransactionTemplate,
 ) : UserRepository {
     override fun get(id: Long, forUpdate: Boolean): User? {
-        return dsl.selectFrom(USERS)
+        val user = dsl.selectFrom(USERS)
             .where(USERS.ID.eq(id))
             .let {
                 if (forUpdate) {
@@ -24,13 +26,17 @@ class UserRepositoryImpl(
                 }
             }
             .fetchOne()?.toModel()
+
+        return user?.copy(roles = getUserRoles(id))
     }
 
     override fun findByUsername(username: String): User? {
-        return dsl.selectFrom(USERS)
+        val user = dsl.selectFrom(USERS)
             .where(USERS.USERNAME.eq(username))
             .and(USERS.IS_DISABLED.isFalse)
             .fetchOne()?.toModel()
+
+        return user?.copy(roles = getUserRoles(user.id!!))
     }
 
     override fun saveUser(user: User) {
@@ -51,6 +57,43 @@ class UserRepositoryImpl(
         }
     }
 
+    override fun disableUser(id: Long) {
+        dsl.update(USERS)
+            .set(USERS.IS_DISABLED, true)
+            .where(USERS.ID.eq(id))
+            .execute()
+    }
+
+    override fun addRole(userId: Long, role: Role) {
+        dsl.insertInto(USER_ROLES)
+            .set(USER_ROLES.USER_ID, userId)
+            .set(USER_ROLES.ROLE, role.name)
+            .onConflictDoNothing()
+            .execute()
+    }
+
+    override fun removeRole(userId: Long, role: Role) {
+        dsl.deleteFrom(USER_ROLES)
+            .where(USER_ROLES.USER_ID.eq(userId))
+            .and(USER_ROLES.ROLE.eq(role.name))
+            .execute()
+    }
+
+    private fun getUserRoles(userId: Long): Set<Role> {
+        return dsl.select(USER_ROLES.ROLE)
+            .from(USER_ROLES)
+            .where(USER_ROLES.USER_ID.eq(userId))
+            .fetchSet(USER_ROLES.ROLE)
+            .mapNotNull {
+                try{
+                    Role.valueOf(it)
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
+            }
+            .toSet()
+    }
+
     private fun validateUpdate(user: User, userOld: User?) {
         if (userOld == null) throw IllegalStateException("No such user")
 
@@ -63,7 +106,7 @@ class UserRepositoryImpl(
             id,
             username,
             password,
-            isDisabled
+            isDisabled,
         )
 
         private fun UsersRecord.toModel(): User = User(
@@ -71,7 +114,7 @@ class UserRepositoryImpl(
             username,
             password,
             emptySet(),
-            isDisabled
+            isDisabled,
         )
     }
 }

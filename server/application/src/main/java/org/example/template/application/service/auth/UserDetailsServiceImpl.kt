@@ -31,6 +31,18 @@ class UserDetailsServiceImpl(
         userRepository.updateUser(userId, user)
     }
 
+    fun disableUser(userId: Long) {
+        userRepository.disableUser(userId)
+    }
+
+    fun addRole(userId: Long, role: Role) {
+        userRepository.addRole(userId, role)
+    }
+
+    fun removeRole(userId: Long, role: Role) {
+        userRepository.removeRole(userId, role)
+    }
+
     fun createUserModel(
         id: Long?,
         username: String,
@@ -39,6 +51,7 @@ class UserDetailsServiceImpl(
         id,
         username,
         passwordEncoder.encode(password),
-        listOf(Role.USER),
+        setOf(Role.USER),
+        false,
     )
 }

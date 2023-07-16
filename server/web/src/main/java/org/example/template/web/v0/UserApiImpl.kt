@@ -2,6 +2,7 @@ package org.example.template.web.v0
 
 import org.example.template.api.v0.UserApi
 import org.example.template.api.v0.dto.user.JwtTokensDto
+import org.example.template.api.v0.dto.user.RoleDto
 import org.example.template.api.v0.dto.user.UserDto
 import org.example.template.application.service.auth.AuthService
 import org.example.template.application.service.auth.UserDetailsServiceImpl
@@ -10,6 +11,7 @@ import org.example.template.domain.model.auth.User
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 
@@ -47,17 +49,33 @@ class UserApiImpl(
         return ResponseEntity(userDetailsServiceImpl.getUser(username).toDto(), HttpStatus.OK)
     }
 
+    override fun disable(): ResponseEntity<String> {
+        val username = SecurityContextHolder.getContext().authentication.name
+        LOG.info("Disable $username")
+        userDetailsServiceImpl.disableUser(userDetailsServiceImpl.getUser(username).id!!)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+    override fun addRole(roleDto: RoleDto): ResponseEntity<String> {
+        TODO("Not yet implemented")
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    override fun removeRole(roleDto: RoleDto): ResponseEntity<String> {
+        TODO("Not yet implemented")
+    }
+
     private fun UserDto.toModel(): User = userDetailsServiceImpl.createUserModel(id, username, password)
 
     companion object {
         private val LOG = LoggerFactory.getLogger(UserApiImpl::class.java)
 
         private fun User.toDto(): UserDto = UserDto(
-            id, username, password
+            id,
+            username,
+            password,
         )
 
         private fun JwtTokens.toDto(): JwtTokensDto = JwtTokensDto(accessToken, refreshToken)
     }
 }
-
-
