@@ -5,8 +5,10 @@ package org.example.template.domain.db;
 
 
 import org.example.template.domain.db.tables.FlywaySchemaHistory;
+import org.example.template.domain.db.tables.JwtTokens;
 import org.example.template.domain.db.tables.Users;
 import org.example.template.domain.db.tables.records.FlywaySchemaHistoryRecord;
+import org.example.template.domain.db.tables.records.JwtTokensRecord;
 import org.example.template.domain.db.tables.records.UsersRecord;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
@@ -26,5 +28,6 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
+    public static final UniqueKey<JwtTokensRecord> JWT_TOKENS_JWT_TOKEN_KEY = Internal.createUniqueKey(JwtTokens.JWT_TOKENS, DSL.name("jwt_tokens_jwt_token_key"), new TableField[] { JwtTokens.JWT_TOKENS.JWT_TOKEN }, true);
     public static final UniqueKey<UsersRecord> USERS_USERNAME_KEY = Internal.createUniqueKey(Users.USERS, DSL.name("users_username_key"), new TableField[] { Users.USERS.USERNAME }, true);
 }

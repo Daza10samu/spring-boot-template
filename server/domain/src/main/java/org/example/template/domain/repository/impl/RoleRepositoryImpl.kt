@@ -18,8 +18,9 @@ class RoleRepositoryImpl(
             .from(UserRoles.USER_ROLES)
             .where(UserRoles.USER_ROLES.USER_ID.eq(userId))
             .mapNotNull {
-                try{ Role.valueOf(it.value1()) }
-                catch (e: IllegalArgumentException) {
+                try {
+                    Role.valueOf(it.value1())
+                } catch (e: IllegalArgumentException) {
                     LOG.warn("Unknown role for user $userId ${it.value1()}")
                     null
                 }
@@ -28,11 +29,11 @@ class RoleRepositoryImpl(
     }
 
     override fun addRoles(userId: Long, roles: Set<Role>): Int = dsl.insertInto(UserRoles.USER_ROLES)
-            .values(
-                roles.map { UserRolesRecord(userId, it.toString()) }
-            )
-            .onConflictDoNothing()
-            .execute()
+        .values(
+            roles.map { UserRolesRecord(userId, it.toString()) },
+        )
+        .onConflictDoNothing()
+        .execute()
 
     override fun removeRoles(userId: Long, roles: Set<Role>): Int = dsl.delete(UserRoles.USER_ROLES)
         .where(UserRoles.USER_ROLES.USER_ID.eq(userId))

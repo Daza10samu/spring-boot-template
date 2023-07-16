@@ -20,11 +20,18 @@ CREATE UNIQUE INDEX IF NOT EXISTS user_roles__user_role__idx
     ON user_roles (user_id, role);
 
 CREATE TABLE IF NOT EXISTS jwt_tokens (
-    id            BIGSERIAL,
-    jwt_token     VARCHAR(32),
+    jwt_token     VARCHAR(1024) unique,
     expiration_ts BIGINT,
-    type          VARCHAR(16)
+    user_id       BIGINT,
+    type          VARCHAR(16),
+    revoked       BOOLEAN
 );
 
-CREATE INDEX IF NOT EXISTS jwt_tokens__type_expiration_ts__idx
-    ON jwt_tokens (type, expiration_ts);
+CREATE INDEX IF NOT EXISTS jwt_tokens__expiration_ts__idx
+    ON jwt_tokens (expiration_ts);
+
+CREATE INDEX IF NOT EXISTS jwt_tokens__user_id__idx
+    ON jwt_tokens (user_id);
+
+CREATE INDEX IF NOT EXISTS jwt_tokens__token__idx
+    ON jwt_tokens (jwt_token);

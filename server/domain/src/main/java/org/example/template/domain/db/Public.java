@@ -66,7 +66,6 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Sequence<?>> getSequences() {
         return Arrays.<Sequence<?>>asList(
-            Sequences.JWT_TOKENS_ID_SEQ,
             Sequences.USERS_ID_SEQ);
     }
 

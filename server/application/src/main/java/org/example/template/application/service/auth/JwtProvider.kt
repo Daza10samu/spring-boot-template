@@ -7,6 +7,7 @@ import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import org.example.template.domain.model.auth.JwtToken
 import org.example.template.domain.model.auth.User
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -23,6 +24,7 @@ import javax.crypto.SecretKey
 
 @Component
 class JwtProvider(
+    private val revokedCache: JwtRevokedCache,
     @Value("\${jwt.secret.access}") jwtAccessSecret: String,
     @Value("\${jwt.secret.refresh}") jwtRefreshSecret: String,
     @Value("\${jwt.access.time:5}") private val jwtAccessTime: Long,
@@ -33,31 +35,43 @@ class JwtProvider(
     private val jwtAccessSecret: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret))
     private val jwtRefreshSecret: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret))
 
-    fun generateAccessToken(user: User): String {
+    fun generateAccessToken(user: User): JwtToken {
         val now: LocalDateTime = LocalDateTime.now()
         val accessExpirationInstant: Instant = now.plus(Duration.of(jwtAccessTime, jwtAccessTimeUnit))
             .atZone(ZoneId.systemDefault())
             .toInstant()
         val accessExpiration: Date = Date.from(accessExpirationInstant)
-        return Jwts.builder()
-            .setSubject(user.username)
-            .setExpiration(accessExpiration)
-            .signWith(jwtAccessSecret)
-            .claim("roles", user.roles)
-            .compact()
+        return JwtToken(
+            Jwts.builder()
+                .setSubject(user.username)
+                .setExpiration(accessExpiration)
+                .signWith(jwtAccessSecret)
+                .claim("roles", user.roles)
+                .compact(),
+            accessExpirationInstant.toEpochMilli(),
+            user.id!!,
+            JwtToken.Type.ACCESS,
+            false,
+        )
     }
 
-    fun generateRefreshToken(user: User): String {
+    fun generateRefreshToken(user: User): JwtToken {
         val now: LocalDateTime = LocalDateTime.now()
         val refreshExpirationInstant: Instant = now.plus(Duration.of(jwtRefreshTime, jwtRefreshTimeUnit))
             .atZone(ZoneId.systemDefault())
             .toInstant()
         val refreshExpiration: Date = Date.from(refreshExpirationInstant)
-        return Jwts.builder()
-            .setSubject(user.username)
-            .setExpiration(refreshExpiration)
-            .signWith(jwtRefreshSecret)
-            .compact()
+        return JwtToken(
+            Jwts.builder()
+                .setSubject(user.username)
+                .setExpiration(refreshExpiration)
+                .signWith(jwtRefreshSecret)
+                .compact(),
+            refreshExpirationInstant.toEpochMilli(),
+            user.id!!,
+            JwtToken.Type.REFRESH,
+            false,
+        )
     }
 
     fun validateAccessToken(accessToken: String): Boolean {
@@ -70,6 +84,10 @@ class JwtProvider(
 
     private fun validateToken(token: String, secret: Key): Boolean {
         try {
+            if (revokedCache.isRevoked(token)) {
+                log.error("Token revoked")
+                return false
+            }
             Jwts.parserBuilder()
                 .setSigningKey(secret)
                 .build()
@@ -89,7 +107,7 @@ class JwtProvider(
         return false
     }
 
-    fun getAccessClaims( token: String): Claims {
+    fun getAccessClaims(token: String): Claims {
         return getClaims(token, jwtAccessSecret)
     }
 

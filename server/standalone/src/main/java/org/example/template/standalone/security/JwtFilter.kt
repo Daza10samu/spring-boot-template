@@ -1,4 +1,4 @@
-package org.example.template.web.auth
+package org.example.template.standalone.security
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper

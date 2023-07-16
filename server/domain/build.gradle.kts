@@ -29,13 +29,14 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-jooq")
+    api("org.springframework.boot:spring-boot-starter-jdbc")
+    api("org.springframework.boot:spring-boot-starter-jooq")
+    api("org.jetbrains.kotlin:kotlin-reflect")
+    api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    api("org.springframework.boot:spring-boot-starter-security")
+
     implementation("org.jobrunr:jobrunr-spring-boot-2-starter:6.1.1")
-    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.flywaydb:flyway-core")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     runtimeOnly("org.postgresql:postgresql")
 
@@ -85,17 +86,17 @@ tasks.create("generate") {
                 Configuration().withGenerator(
                     Generator().withDatabase(
                         Database()
-                            .withInputSchema(schema)
+                            .withInputSchema(schema),
                     ).withGenerate(
-                        Generate()
+                        Generate(),
                     ).withTarget(
                         Target()
                             .withPackageName("org.example.template.domain.db")
-                            .withDirectory("$projectDir/src/main/java/")
-                    )
+                            .withDirectory("$projectDir/src/main/java/"),
+                    ),
                 ).withJdbc(
-                    Jdbc().withUrl(embeddedPostgres.getJdbcUrl(userName, dbName))
-                )
+                    Jdbc().withUrl(embeddedPostgres.getJdbcUrl(userName, dbName)),
+                ),
             )
         }
 }

@@ -1,4 +1,70 @@
 package org.example.template.domain.repository.impl
 
-class JwtTokensRepositoryImpl {
+import org.example.template.domain.db.tables.JwtTokens
+import org.example.template.domain.db.tables.records.JwtTokensRecord
+import org.example.template.domain.model.auth.JwtToken
+import org.example.template.domain.repository.JwtTokensRepository
+import org.jooq.DSLContext
+import org.springframework.stereotype.Repository
+
+@Repository
+class JwtTokensRepositoryImpl(
+    private val dsl: DSLContext,
+) : JwtTokensRepository {
+    override fun saveToken(token: JwtToken) {
+        dsl.insertInto(JwtTokens.JWT_TOKENS)
+            .values(token.toRecord())
+            .execute()
+    }
+
+    override fun getToken(tokenString: String): JwtToken? {
+        return dsl.selectFrom(JwtTokens.JWT_TOKENS)
+            .where(JwtTokens.JWT_TOKENS.JWT_TOKEN.eq(tokenString))
+            .and(JwtTokens.JWT_TOKENS.REVOKED.isFalse)
+            .fetchOne()?.toModel()
+    }
+
+    override fun getRevokedTokens(): Collection<JwtToken> {
+        return dsl.selectFrom(JwtTokens.JWT_TOKENS)
+            .where(JwtTokens.JWT_TOKENS.REVOKED.isTrue)
+            .map { it.toModel() }
+    }
+
+    override fun revokeToken(tokenString: String) {
+        dsl.update(JwtTokens.JWT_TOKENS)
+            .set(JwtTokens.JWT_TOKENS.REVOKED, true)
+            .where(JwtTokens.JWT_TOKENS.JWT_TOKEN.eq(tokenString))
+            .execute()
+    }
+
+    override fun revokeTokensByUserId(userId: Long) {
+        dsl.update(JwtTokens.JWT_TOKENS)
+            .set(JwtTokens.JWT_TOKENS.REVOKED, true)
+            .where(JwtTokens.JWT_TOKENS.USER_ID.eq(userId))
+            .execute()
+    }
+
+    override fun deleteExpiredTokens() {
+        dsl.deleteFrom(JwtTokens.JWT_TOKENS)
+            .where(JwtTokens.JWT_TOKENS.EXPIRATION_TS.lt(System.currentTimeMillis()))
+            .execute()
+    }
+
+    companion object {
+        private fun JwtToken.toRecord(): JwtTokensRecord = JwtTokensRecord(
+            token,
+            expiration,
+            userId,
+            type.toString(),
+            isRevoked,
+        )
+
+        private fun JwtTokensRecord.toModel(): JwtToken = JwtToken(
+            jwtToken,
+            expirationTs,
+            userId,
+            JwtToken.Type.valueOf(type),
+            revoked,
+        )
+    }
 }
