@@ -5,6 +5,9 @@ package org.example.template.domain.db;
 
 
 import org.example.template.domain.db.tables.FlywaySchemaHistory;
+import org.example.template.domain.db.tables.JwtTokens;
+import org.example.template.domain.db.tables.UserRoles;
+import org.example.template.domain.db.tables.Users;
 import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;
@@ -22,4 +25,8 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     public static final Index FLYWAY_SCHEMA_HISTORY_S_IDX = Internal.createIndex(DSL.name("flyway_schema_history_s_idx"), FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, new OrderField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.SUCCESS }, false);
+    public static final Index JWT_TOKENS__TYPE_EXPIRATION_TS__IDX = Internal.createIndex(DSL.name("jwt_tokens__type_expiration_ts__idx"), JwtTokens.JWT_TOKENS, new OrderField[] { JwtTokens.JWT_TOKENS.TYPE, JwtTokens.JWT_TOKENS.EXPIRATION_TS }, false);
+    public static final Index USER_ROLES__USER_ROLE__IDX = Internal.createIndex(DSL.name("user_roles__user_role__idx"), UserRoles.USER_ROLES, new OrderField[] { UserRoles.USER_ROLES.USER_ID, UserRoles.USER_ROLES.ROLE }, true);
+    public static final Index USERS__DISABLED_USERNAME__IDX = Internal.createIndex(DSL.name("users__disabled_username__idx"), Users.USERS, new OrderField[] { Users.USERS.IS_DISABLED, Users.USERS.USERNAME }, false);
+    public static final Index USERS__USERNAME__IDX = Internal.createIndex(DSL.name("users__username__idx"), Users.USERS, new OrderField[] { Users.USERS.USERNAME }, false);
 }

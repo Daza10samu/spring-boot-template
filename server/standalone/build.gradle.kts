@@ -9,6 +9,7 @@ plugins {
 
     id("org.springframework.boot") version "2.7.0"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.graalvm.buildtools.native") version "0.9.20"
 }
 
 group = "org.example.server"

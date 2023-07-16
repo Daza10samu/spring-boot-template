@@ -1,15 +1,18 @@
-package org.example.template.application.service
+package org.example.template.application.service.auth
 
-import org.example.template.domain.model.User
+import org.example.template.domain.model.auth.Role
+import org.example.template.domain.model.auth.User
 import org.example.template.domain.repository.UserRepository
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class UserDetailsServiceImpl(
-    val userRepository: UserRepository,
+    private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder,
 ) : UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails {
         val user = userRepository.findByUsername(username) ?: throw UsernameNotFoundException(username)
@@ -27,4 +30,15 @@ class UserDetailsServiceImpl(
     fun updateUser(userId: Long, user: User) {
         userRepository.updateUser(userId, user)
     }
+
+    fun createUserModel(
+        id: Long?,
+        username: String,
+        password: String,
+    ): User = User(
+        id,
+        username,
+        passwordEncoder.encode(password),
+        listOf(Role.USER),
+    )
 }

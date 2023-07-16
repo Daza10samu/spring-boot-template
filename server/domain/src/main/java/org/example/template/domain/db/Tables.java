@@ -5,6 +5,8 @@ package org.example.template.domain.db;
 
 
 import org.example.template.domain.db.tables.FlywaySchemaHistory;
+import org.example.template.domain.db.tables.JwtTokens;
+import org.example.template.domain.db.tables.UserRoles;
 import org.example.template.domain.db.tables.Users;
 
 
@@ -18,6 +20,16 @@ public class Tables {
      * The table <code>public.flyway_schema_history</code>.
      */
     public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
+
+    /**
+     * The table <code>public.jwt_tokens</code>.
+     */
+    public static final JwtTokens JWT_TOKENS = JwtTokens.JWT_TOKENS;
+
+    /**
+     * The table <code>public.user_roles</code>.
+     */
+    public static final UserRoles USER_ROLES = UserRoles.USER_ROLES;
 
     /**
      * The table <code>public.users</code>.

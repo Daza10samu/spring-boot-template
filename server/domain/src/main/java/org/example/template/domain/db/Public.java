@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.example.template.domain.db.tables.FlywaySchemaHistory;
+import org.example.template.domain.db.tables.JwtTokens;
+import org.example.template.domain.db.tables.UserRoles;
 import org.example.template.domain.db.tables.Users;
 import org.jooq.Catalog;
 import org.jooq.Sequence;
@@ -34,6 +36,16 @@ public class Public extends SchemaImpl {
     public final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
 
     /**
+     * The table <code>public.jwt_tokens</code>.
+     */
+    public final JwtTokens JWT_TOKENS = JwtTokens.JWT_TOKENS;
+
+    /**
+     * The table <code>public.user_roles</code>.
+     */
+    public final UserRoles USER_ROLES = UserRoles.USER_ROLES;
+
+    /**
      * The table <code>public.users</code>.
      */
     public final Users USERS = Users.USERS;
@@ -54,6 +66,7 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Sequence<?>> getSequences() {
         return Arrays.<Sequence<?>>asList(
+            Sequences.JWT_TOKENS_ID_SEQ,
             Sequences.USERS_ID_SEQ);
     }
 
@@ -61,6 +74,8 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
+            JwtTokens.JWT_TOKENS,
+            UserRoles.USER_ROLES,
             Users.USERS);
     }
 }

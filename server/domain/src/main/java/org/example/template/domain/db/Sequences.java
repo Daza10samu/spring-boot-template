@@ -16,6 +16,11 @@ import org.jooq.impl.SQLDataType;
 public class Sequences {
 
     /**
+     * The sequence <code>public.jwt_tokens_id_seq</code>
+     */
+    public static final Sequence<Long> JWT_TOKENS_ID_SEQ = Internal.createSequence("jwt_tokens_id_seq", Public.PUBLIC, SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
+
+    /**
      * The sequence <code>public.users_id_seq</code>
      */
     public static final Sequence<Long> USERS_ID_SEQ = Internal.createSequence("users_id_seq", Public.PUBLIC, SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);

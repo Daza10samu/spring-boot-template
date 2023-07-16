@@ -2,7 +2,7 @@ package org.example.template.domain.repository.impl
 
 import org.example.template.domain.db.Tables.USERS
 import org.example.template.domain.db.tables.records.UsersRecord
-import org.example.template.domain.model.User
+import org.example.template.domain.model.auth.User
 import org.example.template.domain.repository.UserRepository
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
@@ -29,6 +29,7 @@ class UserRepositoryImpl(
     override fun findByUsername(username: String): User? {
         return dsl.selectFrom(USERS)
             .where(USERS.USERNAME.eq(username))
+            .and(USERS.IS_DISABLED.isFalse)
             .fetchOne()?.toModel()
     }
 
@@ -62,12 +63,15 @@ class UserRepositoryImpl(
             id,
             username,
             password,
+            isDisabled
         )
 
         private fun UsersRecord.toModel(): User = User(
             id,
             username,
             password,
+            emptySet(),
+            isDisabled
         )
     }
 }

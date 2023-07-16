@@ -1,6 +1,6 @@
 package org.example.template.domain.repository
 
-import org.example.template.domain.model.User
+import org.example.template.domain.model.auth.User
 
 interface UserRepository {
     fun get(id: Long, forUpdate: Boolean = false): User?
