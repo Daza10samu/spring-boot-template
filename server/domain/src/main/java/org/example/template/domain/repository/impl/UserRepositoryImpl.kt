@@ -57,6 +57,13 @@ class UserRepositoryImpl(
         }
     }
 
+    override fun getAllUsers(): List<User> {
+        return dsl.selectFrom(USERS)
+            .where(USERS.IS_DISABLED.isFalse)
+            .fetch()
+            .map { it.toModel().copy(roles = getUserRoles(it.id)) }
+    }
+
     override fun disableUser(id: Long) {
         dsl.update(USERS)
             .set(USERS.IS_DISABLED, true)

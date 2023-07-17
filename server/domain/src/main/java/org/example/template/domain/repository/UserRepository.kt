@@ -8,6 +8,7 @@ interface UserRepository {
     fun findByUsername(username: String): User?
     fun saveUser(user: User)
     fun updateUser(id: Long, user: User)
+    fun getAllUsers(): List<User>
     fun disableUser(id: Long)
     fun addRole(userId: Long, role: Role)
     fun removeRole(userId: Long, role: Role)

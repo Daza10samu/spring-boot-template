@@ -7,6 +7,7 @@ import org.example.template.api.v0.dto.user.UserDto
 import org.example.template.application.service.auth.AuthService
 import org.example.template.application.service.auth.UserDetailsServiceImpl
 import org.example.template.application.service.auth.models.JwtTokens
+import org.example.template.domain.model.auth.Role
 import org.example.template.domain.model.auth.User
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 class UserApiImpl(
@@ -56,13 +58,24 @@ class UserApiImpl(
         return ResponseEntity(HttpStatus.OK)
     }
 
-    override fun addRole(roleDto: RoleDto): ResponseEntity<String> {
-        TODO("Not yet implemented")
+    override fun allUsers(): ResponseEntity<List<UserDto>> {
+        val username = SecurityContextHolder.getContext().authentication.name
+        LOG.info("All users $username")
+        return ResponseEntity(userDetailsServiceImpl.getAllUsers().map { it.toDto() }, HttpStatus.OK)
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    override fun removeRole(roleDto: RoleDto): ResponseEntity<String> {
-        TODO("Not yet implemented")
+    override fun addRole(userId: Long, roleDto: RoleDto): ResponseEntity<String> {
+        val username = SecurityContextHolder.getContext().authentication.name
+        LOG.info("Adding role $roleDto to $username")
+        userDetailsServiceImpl.addRole(userDetailsServiceImpl.getUser(username).id!!, Role.valueOf(roleDto.role.name))
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+    override fun removeRole(userId: Long, roleDto: RoleDto): ResponseEntity<String> {
+        val username = SecurityContextHolder.getContext().authentication.name
+        LOG.info("Removing role $roleDto to $username")
+        userDetailsServiceImpl.addRole(userDetailsServiceImpl.getUser(username).id!!, Role.valueOf(roleDto.role.name))
+        return ResponseEntity(HttpStatus.OK)
     }
 
     private fun UserDto.toModel(): User = userDetailsServiceImpl.createUserModel(id, username, password)

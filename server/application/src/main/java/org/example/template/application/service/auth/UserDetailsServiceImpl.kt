@@ -31,6 +31,10 @@ class UserDetailsServiceImpl(
         userRepository.updateUser(userId, user)
     }
 
+    fun getAllUsers(): List<User> {
+        return userRepository.getAllUsers()
+    }
+
     fun disableUser(userId: Long) {
         userRepository.disableUser(userId)
     }

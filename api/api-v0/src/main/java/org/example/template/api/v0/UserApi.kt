@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping(
@@ -34,10 +35,14 @@ interface UserApi {
     fun disable(): ResponseEntity<String>
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/allUsers")
+    fun allUsers(): ResponseEntity<List<UserDto>>
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add_role")
-    fun addRole(@RequestBody roleDto: RoleDto): ResponseEntity<String>
+    fun addRole(@RequestParam userId: Long, @RequestBody roleDto: RoleDto): ResponseEntity<String>
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/remove_role")
-    fun removeRole(@RequestBody roleDto: RoleDto): ResponseEntity<String>
+    fun removeRole(@RequestParam userId: Long, @RequestBody roleDto: RoleDto): ResponseEntity<String>
 }
