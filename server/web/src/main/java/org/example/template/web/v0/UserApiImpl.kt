@@ -74,7 +74,7 @@ class UserApiImpl(
     override fun removeRole(userId: Long, roleDto: RoleDto): ResponseEntity<String> {
         val username = SecurityContextHolder.getContext().authentication.name
         LOG.info("Removing role $roleDto to $username")
-        userDetailsServiceImpl.addRole(userDetailsServiceImpl.getUser(username).id!!, Role.valueOf(roleDto.role.name))
+        userDetailsServiceImpl.removeRole(userDetailsServiceImpl.getUser(username).id!!, Role.valueOf(roleDto.role.name))
         return ResponseEntity(HttpStatus.OK)
     }
 
